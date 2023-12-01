@@ -6,3 +6,6 @@ pylint:
   options:
     good-names:
       - hp
+
+  disable:
+    - django-not-configured
