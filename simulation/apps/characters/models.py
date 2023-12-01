@@ -13,9 +13,6 @@ class CharacterAlignment(models.Model):
         BAD = 'bad'
         NEUTRAL = 'neutral'
 
-    def __str__(self):
-        return self.name
-
 
 class Character(models.Model):
 
@@ -40,9 +37,6 @@ class Character(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
 
     def calc_hp(self):
         """Calculates the HP of a hero."""

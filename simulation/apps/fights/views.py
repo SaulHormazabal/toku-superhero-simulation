@@ -11,7 +11,7 @@ class FightCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save()
-        simulate_fight.delay(id=serializer.data['id'])
+        simulate_fight.delay(fight_id=serializer.data['id'])
 
 
 class FightRetrieveView(generics.RetrieveAPIView):
@@ -29,7 +29,8 @@ class FightListView(generics.ListAPIView):
         'loser__alignment__name',
     )
     ordering_fields = (
-        'created_at',
+        'id',
         'turns',
+        'created_at',
         'updated_at',
     )

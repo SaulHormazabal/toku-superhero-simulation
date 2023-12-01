@@ -9,14 +9,20 @@ CHARACTER_STATISTICS_SQL = '''
         c.id AS id,
         c.id AS character_id,
         c.name AS character_name,
-        COUNT(f.id) AS total_fights,
-        COUNT(f.winner_id) AS wins,
-        COUNT(f.loser_id) AS losses,
-        COALESCE(COUNT(f.winner_id) / NULLIF(COUNT(f.id), 0), 0) AS win_rate
+        COALESCE(COUNT(DISTINCT ff_winner.id), 0) AS wins,
+        COALESCE(COUNT(DISTINCT ff_loser.id), 0) AS losses,
+        COALESCE(COUNT(DISTINCT ff.id), 0) AS total_fights,
+        COALESCE(
+            (COUNT(DISTINCT ff_winner.id)::float / NULLIF(COUNT(DISTINCT ff.id), 0)) * 100, 0
+        ) AS win_rate
     FROM
-        characters_character c
+        public.characters_character c
     LEFT JOIN
-        fights_fight f ON c.id = f.winner_id OR c.id = f.loser_id
+        public.fights_fight ff_winner ON c.id = ff_winner.winner_id
+    LEFT JOIN
+        public.fights_fight ff_loser ON c.id = ff_loser.loser_id
+    LEFT JOIN
+        public.fights_fight ff ON c.id = ff.winner_id OR c.id = ff.loser_id
     GROUP BY
         c.id, c.name;
 '''
@@ -27,16 +33,22 @@ ALIGNMENT_STATISTICS_SQL = '''
         ca.id AS id,
         ca.id AS alignment_id,
         ca.name AS alignment_name,
-        COUNT(f.id) AS total_fights,
-        COUNT(f.winner_id) AS wins,
-        COUNT(f.loser_id) AS losses,
-        COALESCE(COUNT(f.winner_id) / NULLIF(COUNT(f.id), 0), 0) AS win_rate
+        COALESCE(COUNT(DISTINCT ff_winner.id), 0) AS wins,
+        COALESCE(COUNT(DISTINCT ff_loser.id), 0) AS losses,
+        COALESCE(COUNT(DISTINCT ff.id), 0) AS total_fights,
+        COALESCE(
+            COUNT(DISTINCT ff_winner.id)::float / NULLIF(COUNT(DISTINCT ff.id), 0) * 100, 0
+        ) AS win_rate
     FROM
-        characters_characteralignment ca
+        public.characters_characteralignment ca
     LEFT JOIN
-        characters_character c ON ca.id = c.alignment_id
+        public.characters_character c ON ca.id = c.alignment_id
     LEFT JOIN
-        fights_fight f ON c.id = f.winner_id OR c.id = f.loser_id
+        public.fights_fight ff_winner ON c.id = ff_winner.winner_id
+    LEFT JOIN
+        public.fights_fight ff_loser ON c.id = ff_loser.loser_id
+    LEFT JOIN
+        public.fights_fight ff ON c.id = ff.winner_id OR c.id = ff.loser_id
     GROUP BY
         ca.id, ca.name;
 '''
