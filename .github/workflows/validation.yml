@@ -16,6 +16,7 @@ jobs:
       DATABASE_PORT: 5432
       SUPERHERO_API_URL: https://superheroapi.com/api/token
       CELERY_BROKER_REDIS_URL: redis://localhost:6379/0
+      ALLOWED_HOSTS: simulation.localhost
 
     services:
       postgres:
@@ -54,6 +55,7 @@ jobs:
           DATABASE_PORT: ${{ env.DATABASE_PORT }}
           SUPERHERO_API_URL: ${{ env.SUPERHERO_API_URL }}
           CELERY_BROKER_REDIS_URL: ${{ env.CELERY_BROKER_REDIS_URL }}
+          ALLOWED_HOSTS: ${{ env.ALLOWED_HOSTS }}
 
       - name: Tests
         run: coverage run manage.py test -v 2
@@ -67,6 +69,7 @@ jobs:
           DATABASE_PORT: ${{ env.DATABASE_PORT }}
           SUPERHERO_API_URL: ${{ env.SUPERHERO_API_URL }}
           CELERY_BROKER_REDIS_URL: ${{ env.CELERY_BROKER_REDIS_URL }}
+          ALLOWED_HOSTS: ${{ env.ALLOWED_HOSTS }}
 
       - name: Reporte de cobertura
         run: coverage report --fail-under 90 -m
