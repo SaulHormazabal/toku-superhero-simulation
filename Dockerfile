@@ -9,3 +9,5 @@ COPY poetry.lock pyproject.toml /usr/src/app/
 RUN pip3 install poetry --only main
 
 RUN poetry install
+
+COPY . .
