@@ -1,0 +1,8 @@
+strictness: veryhigh
+test-warnings: true
+max-line-length: 100
+
+pylint:
+  options:
+    good-names:
+      - hp
